@@ -25,7 +25,8 @@ var server = http.createServer(function(request, response){
 	response.end("<h2>End에서 보낸 메세지</h2>");
 });
 
-// 3. 클라이언트가 서버에 접소가면 접속을 받아낼 이벤트
+// 3. 클라이언트가 서버에 접속하면 접속을 받아낼 이벤트
+//  ***.listen() : 이벤트 대기
 //			 포트번호
 server.listen(10001,function(){
 	console.log('서버 대기중 ...http://localhost:10001');

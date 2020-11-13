@@ -13,7 +13,7 @@ var server = http.createServer(function(request, response){
 	var urlParse = url.parse(request.url);	
 	console.log(urlParse);
 	
-	//파싱딘 url객체에서 데이터를Json데이터로 변경하는 처리
+	//파싱딘 url객체에서 데이터를 Json데이터로 변경하는 처리
 	var parseQuery= queryString.parse(urlParse.query,'&','=');
 	console.log(parseQuery);
 	response.writeHead(200,{'Content-type':'text/html;charset=UTF-8'});
