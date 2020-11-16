@@ -6,8 +6,9 @@ var server = http.createServer(function(request, response){
 	response.write('번호 : <input type="text" name="num"/><br/>');
 	response.write('이름 : <input type="text" name="username"/><br/>');
 	response.write('연락처: <input type="text" name="tel"/><br/>');
-	response.write('<input type="submit" value="서버로 보내기"/>');
-	response.end('</form>');
+	response.write('<input type="submit" value="서버로 보내기"/><br/>');
+	response.write('</form>');
+	response.end('<img src="./images/bird.gif"/>');
 });
 
 server.listen(10003,function(){

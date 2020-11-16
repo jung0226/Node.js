@@ -6,7 +6,7 @@ fs: FileSystem
 var fs = require('fs');
 
 //쓰기할 내용
-var txt="my first data \r\n노드 js를 이용한 파일스기";
+var txt="my first data \r\n노드 js를 이용한 파일쓰기";
 
 //2. 비동기식으로 파일쓰기: 비동기식은 읽기, 쓰기가 스레드에 의해서 처리된다.
 //				쓰기할 파일주소(절대주소)
