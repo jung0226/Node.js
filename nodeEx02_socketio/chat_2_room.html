@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<meta name="viewport" content="width=deivce, initial-scale=1"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="socket.io/socket.io.js"></script>
+<style>
+	#chatForm{
+		display:none;
+	}
+</style>
+<script>
+	var socket='';
+	$(()=>{
+		$('#btn').on('click',()=>{
+			if($('#roomName').val()==""){
+				alert("방이름을 입력후 생성하세요");
+				return false;
+			}
+			
+			$('#createRoom').css('display','none'); //방 만들기 숨김
+			$('#chatForm').css('display', 'block'); //채팅폼 보여주기
+			$('#chatName').text('방이름:'+$('#roomName').val());
+			
+			//서버에 socket접속
+			socket=io.connect();
+			//클라이언트에서 서버로 방 이름 보내기
+			socket.emit('join',$('#roomName').val());
+			
+			//클라이언트가 서버로 문자 보내기
+			$('#sendMsg').on('click',()=>{
+				socket.emit('message',$('#msg').val());
+				$('#msg').val("");
+			});
+			
+			//서버에서 온 문자 처리 이벤트
+			socket.on('response',(data)=>{
+				$('#allMsg').append(data+"<br/>");
+			});
+		});
+	});
+</script>
+</head>
+<body>
+<div id="createRoom">
+	방이름:<input type="text" id="roomName"/>
+	<input type="button" value="채팅방 만들기" id="btn"/>
+</div>
+<div id="chatForm">
+	<h1 id="chatName">방이름 :4545</h1>
+	<input type="text" id="msg"/>
+	<input type="button" value="Send" id="sendMsg"/>
+	<div id="allMsg" style="border:1px solid lightblue"></div>
+</div>
+</body>
+</html>

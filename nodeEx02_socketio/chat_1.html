@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<meta name="viewport" content="width=deivce, initial-scale=1"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<style>
+	#container{
+		width: 400px;
+		margin: 0 auto;
+	}
+	#txt, #send{width: 400px;}
+</style>
+<script>
+	var socket;
+	$(function(){
+		//1. 서버에 연결하기
+		socket = io.connect();//서버에 연결시도
+		
+		//2. 클라이언트 서버로 문자 보내기: 문자를 내용으로 이벤트 발생시킨다.
+		//			이벤트 종류, 서버로 보낼 내용
+		var msg="클라이언트가 서버로 보낸 첫번째 문자.....";
+		socket.emit('hello',msg);
+		
+		//3. 서버에서 문자를 보내면 (문자보내는 이벤트가 발생하면) 처리할 이벤트
+		socket.on('echo',(data)=>{
+			$('#msg').append(data+'<br/>');
+		});
+		
+		//문자를 서버로 보낼 때 호출할 함수
+		function sendMessage(){
+			var sendData=$('#txt').val();
+			socket.emit('hello', sendData);
+			$('#txt').val("");
+			$('#txt').focus();
+		}
+		// #send가 click 이벤트가 발생하면 서버로 문자보내기
+		$('#send').click(function(){
+			sendMessage();
+		});
+		$('#txt').keyup(function(){
+			//enter키 일대만 서버로 문자 보내기 event내장객체 : 현재 입력한 키 정보를 가지고 있다.
+			if(event.keyCode==13){
+				sendMessage();
+			}
+		});
+		
+	});
+</script>
+</head>
+<body>
+<div id="container">
+	<h1>Echo Chatting</h1>
+	<input type="text" id="txt"/><input type="button" id="send" value="Echo"/>
+	<hr/>
+	<!-- 메시지 표시하는 곳 -->
+	<div style="background-color: #ddd; border:1px solid lightblue" id="msg"></div>
+</div>
+</body>
+</html>

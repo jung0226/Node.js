@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<meta name="viewport" content="width=deivce, initial-scale=1"/>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<style>
+		ul, li{margin:0; padding:0; list-style-type:none;}
+		li{float:left; width:15%; height:40px; line-height:40px; border-bottom:1px solid gray;}
+		li:nth-child(5n+2){width:40%;}
+	</style>
+</head>
+<body>
+<a href="http://localhost:10016/write">글쓰기</a>
+<div>
+	총 레코드 수 : <%=recordCount%><br/>
+	firstPage:<%=paging.firstPage%>, lastPage: <%=paging.lastPage%>, nowPage: <%=paging.nowPage%>
+</div>
+<ul id="boardList">
+	<li>번호</li>
+	<li>제목</li>
+	<li>작성자</li>
+	<li>날짜</li>
+	<li>조회수</li>
+	<% for(var i=0; i< records.rows.length; i++){ //행의 index %>
+	<li><%=records.rows[i][0]%></li>
+	<li><%=records.rows[i][1]%></li>
+	<li><%=records.rows[i][2]%></li>
+	<li><%=records.rows[i][3]%></li>
+	<li><%=records.rows[i][4]%></li>
+	<%}%>
+</ul>
+</body>
+</html>
