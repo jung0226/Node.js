@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<meta name="viewport" content="width=deivce, initial-scale=1"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<h1>글수정</h1>
+<form method="post" action="/editOk">
+	<input type="hidden" name="no" value="<%=results.rows[0][0]%>"/><br/>
+	제목 : <input type="text" name="subject" value="<%=results.rows[0][1]%>"/><br/>
+	글 내용 : <textarea name="content" ><%=results.rows[0][2]%></textarea><br/>
+	<input type="submit" value="수정하기"/>
+</form>
+</body>
+</html>

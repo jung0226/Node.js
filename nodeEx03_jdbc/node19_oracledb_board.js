@@ -3,7 +3,7 @@ var fs = require('fs');
 
 var express = require('express');
 var ejs = require('ejs');
-var reqestip = require('request-ip');
+var requestip = require('request-ip');
 
 var bodyParser = require('body-parser');
 
@@ -61,7 +61,7 @@ app.get('/list', (req, res) => {
 		}
 	});
 });
-//글스기 폼
+//글쓰기 폼
 app.get('/write', (req, res) => {
 	fs.readFile('write.html', (error, data) => {
 		if (!error) {
@@ -74,6 +74,107 @@ app.get('/write', (req, res) => {
 
 });
 
+//글 등록
+app.post('/writeOk',(request,response)=>{
+	//행의 데이터를 request
+	var userid = request.body.userid;
+	var subject=request.body.subject;
+	var content= request.body.content;
+	
+	//접속자의 아이피 구하기 -- 홈페이지 접속시 ip로 접속한다.
+	//	 	192.168.0.225:10016/ 127.0.0.1:110016
+	var ip = requestip.getClientIp(request).substring(7);
+	console.log("ip-> "+ip); // ::ffff:102.168.0.225
+	var sql="insert into freeboard (no, userid, subject, content, ip) ";
+		sql+="values (a_sq.nextval, '"+userid+"','"+subject+"','"+content+"','"+ip+"')";
+		
+	conn.execute(sql, (error, result)=>{
+		if(error){//추가 실패, 글 쓰기
+			//다른 url 리다이렉트 하기
+			response.statusCode =302;
+			response.setHeader('location', '/write');
+			response.end();
+		}else{//추가 성공
+			response.statusCode=302;
+			response.setHeader('Location','/list');
+			response.end();
+		}
+	});
+});
+//글 내용보기
+app.get('/view',(req,res)=>{
+	var no= req.param('no');
+	
+	var sql = "select no, subject, DBMS_LOB.SUBSTR(content,DBMS_LOB.GETLENGTH(content)), userid, ";
+		sql+= "hit, to_char(writedate,'YYYY-MM-DD HH:MI:SS' )";
+		sql += "from freeboard where no="+no;
+	conn.execute(sql,(error,result)=>{
+		if(!error){
+			fs.readFile('view.ejs','utf-8',(error, data)=>{
+				if(!error){
+					res.writeHead(200,{'Content-Type': 'text/html;charset=utf-8'});
+					res.end(ejs.render(data, {
+						results:result
+					}));
+				}
+			});
+		}
+	});
+});
+
+//글 수정 폼
+app.get('/edit',(req,res)=>{
+	var no= req.param('no');
+	var sql = "select no, subject, DBMS_LOB.SUBSTR(content,DBMS_LOB.GETLENGTH(content)) ";
+		sql+= "from freeboard where no="+no;
+	conn.execute(sql,(e, result)=>{
+		if(!e){
+			fs.readFile('edit.ejs', 'utf-8',(error, data)=>{
+				res.writeHead(200,{'Content-Type': 'text/html;charset=utf-8'});
+				res.end(ejs.render(data,{
+					results:result
+				}));
+			});
+		}
+	});
+});
+//글 수정- 실패수정, 성공 글 내용
+app.post('/editOk', (req, res)=>{
+	var no = req.body.no;
+	var subject =req.body.subject;
+	var content = req.body.content;
+	
+	var sql = "update freeboard set subject='"+subject+"',content='"+content+"' ";
+		sql += "where no="+no;
+	conn.execute(sql,(error, result)=>{
+		if(error){//에러 발생
+			res.statusCode=302;
+			res.setHeader('Location','/edit?no='+no);
+			res.end();
+		}else{//
+			res.statusCode=302;
+			res.setHeader('Location','/view?no='+no);
+			res.end();			
+		}
+	});
+});
+
+//삭제하기
+app.get('/del',(req,res)=>{
+	var no=req.param('no');
+	var sql = "delete from freeboard where no="+no;
+	
+	conn.execute(sql,(error, result)=>{
+		if(error){//에러발생
+			res.writeHead(200,{'Content-Type': 'text/html'});
+			res.end("<script>location.href='/view?no='"+no+"';</script>");
+		}else{
+			res.writeHead(200,{'Content-Type': 'text/html'});
+			res.end("<script>location.href='/list';</script>");
+			
+		}
+	});
+});
 
 server.listen(10016, () => {
 	console.log('server Start');

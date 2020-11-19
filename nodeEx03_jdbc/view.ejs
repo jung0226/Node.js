@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	
+</head>
+<body>
+<h1>글 내용 보기</h1>
+<ul>
+	<li>번호: <%=results.rows[0][0]%></li>
+	<li>작성자: <%=results.rows[0][3]%></li>
+	<li>조회수: <%=results.rows[0][4]%></li>
+	<li>날짜: <%=results.rows[0][5]%></li>
+	<li>제목: <%=results.rows[0][1]%></li>
+	<li>글 내용: <%=results.rows[0][2]%></li>
+</ul>
+<a href="/edit?no=<%=results.rows[0][0]%>">수정</a>
+<a href="/del?no=<%=results.rows[0][0]%>">삭제</a>
+</body>
+</html>

@@ -12,7 +12,7 @@
 	</style>
 </head>
 <body>
-<a href="http://localhost:10016/write">글쓰기</a>
+<a href="/write">글쓰기</a>
 <div>
 	총 레코드 수 : <%=recordCount%><br/>
 	firstPage:<%=paging.firstPage%>, lastPage: <%=paging.lastPage%>, nowPage: <%=paging.nowPage%>
@@ -25,7 +25,7 @@
 	<li>조회수</li>
 	<% for(var i=0; i< records.rows.length; i++){ //행의 index %>
 	<li><%=records.rows[i][0]%></li>
-	<li><%=records.rows[i][1]%></li>
+	<li><a href="/view?no=<%=records.rows[i][0]%>"><%=records.rows[i][1]%></a></li>
 	<li><%=records.rows[i][2]%></li>
 	<li><%=records.rows[i][3]%></li>
 	<li><%=records.rows[i][4]%></li>
